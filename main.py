@@ -1,7 +1,5 @@
 import re
 import data
-from Bio.Blast import NCBIWWW
-from Bio.Blast import NCBIXML
 
 class Genoma:
     def __init__(self,adn):
@@ -40,10 +38,6 @@ class Genoma:
         else:
             return False
         
-    def blast(self):
-        result_handle = NCBIWWW.qblast("blastn", "nt", self.adn)
-        blast_record = NCBIXML.read(result_handle)
-        return blast_record
 
 def main():
 
@@ -65,8 +59,6 @@ def main():
     print("Codones:", genoma.codons)
     print("Proteinas:", genoma.proteins)
 
-    blast_record = genoma.blast()
-    print(blast_record.alignments[0].title)
 
 
 if __name__ == "__main__":
