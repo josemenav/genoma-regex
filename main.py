@@ -2,7 +2,7 @@ import re
 import data
 
 class Genoma:
-    def __init__(self,adn):
+    def __init__(self, adn):
         self.size = len(adn)
         self.adn = adn
         self.arn = ""
@@ -12,54 +12,76 @@ class Genoma:
     def to_arn(self):
         self.arn = self.adn.replace('T', 'U')
         valid = self.validate(self.arn)
-        if(valid):
+        if valid:
             for i in range(0, self.size, 3):
                 codon = self.arn[i:i+3]
                 self.codons.append(codon)
             return True
         else:
-            print("El genoma no es valido")
+            print("El genoma no es válido")
             return False
-    
+
     def get_proteins(self):
         for codon in self.codons:
             protein = data.find_set(codon)
             if protein:
-                self.proteins = self.proteins + protein
+                self.proteins += protein
             else:
-                print("El codon {} no es valido".format(codon))
+                print(f"El codon {codon} no es válido")
                 return False
         return True
 
     def validate(self, adn):
         valid = re.compile(r"^(.{3})*$")
-        if valid.match(adn):
-            return True
-        else:
-            return False
-        
+        return bool(valid.match(adn))
+
+    def find_orfs(self):
+        start_codon = "ATG"
+        stop_codons = ["TAA", "TAG", "TGA"]
+        pattern = re.compile(start_codon + "([ATGC]{3})*?(" + "|".join(stop_codons) + ")")
+        matches = pattern.finditer(self.adn)
+        for match in matches:
+            print(match.start(), match.end())
+
+def identify_protein_structure(seq):
+    pattern = re.compile(r"([WG]{1}\w{1,2}[ED]{1}\w{1,2}[WG]{1})")
+    matches = pattern.findall(seq)
+    print(matches)
+
+def identify_rna_structure(seq):
+    pattern = re.compile(r"((?:G|C){3,}|(?:A|U){3,})")
+    matches = pattern.findall(seq)
+    print(matches)
 
 def main():
-
     genoma = Genoma("ATGGATCCAAGTATGGGTGTGAATTCTGTTACCATTTCTGTTGAGGGTATGACTTGCAATTCCTGTGTTTGGACCATTGAGCAGCAGATTGGAAAAGTGAATGGTGTGCATCACATTAAGGTATCACTGGAAGAAAAA")
 
-
     if genoma.to_arn():
-        print("La conversion a ARN fue exitosa.")
+        print("La conversión a ARN fue exitosa.")
     else:
-        print("La conversion a ARN fallo.")
-
+        print("La conversión a ARN falló.")
 
     if genoma.get_proteins():
-        print("La obtencion de proteinas fue exitosa.")
+        print("La obtención de proteínas fue exitosa.")
     else:
-        print("La obtencion de proteinas fallo.")
-
+        print("La obtención de proteínas falló.")
 
     print("Codones:", genoma.codons)
-    print("Proteinas:", genoma.proteins)
+    print("Proteínas:", genoma.proteins)
 
+    print("Longitud:", genoma.size)
+    genoma.find_orfs()
 
+    # Ejemplo de identificación de estructura de proteínas
+    protein_seq = genoma.proteins
+    print("Proteínas:", protein_seq)
+    print("Longitud:", len(protein_seq))
+    identify_protein_structure(protein_seq)
+
+    # Ejemplo de identificación de estructura de ARN
+    rna_seq = genoma.arn
+    print("ARN:", rna_seq)
+    identify_rna_structure(rna_seq)
 
 if __name__ == "__main__":
     main()
