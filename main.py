@@ -48,9 +48,9 @@ class Genoma:
 
 def find_motif(genome, motif):
     pattern = re.compile(motif)
-    matches = pattern.findall(genome.arn)
-
-    print(matches)
+    matches = pattern.finditer(genome.adn)
+    for match in matches:
+        print("Match indexes: ",match.start(), match.end())
 
 
 def identify_protein_structure(genome):
@@ -61,7 +61,7 @@ def identify_protein_structure(genome):
     print(proteinstr)
     pattern = re.compile(r"([WG]\w{1,2}[ED]\w{1,2}[WG])")
     matches = pattern.findall(proteinstr)
-    print(matches)
+    print("coincidencias encontradas",matches)
 
 
 def identify_rna_structure(genome):
