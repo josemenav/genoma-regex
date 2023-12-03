@@ -59,7 +59,7 @@ def identify_protein_structure(genome):
         proteinstr += protein
 
     print(proteinstr)
-    pattern = re.compile(r"([WG]\w{1,2}[ED]\w{1,2}[WG])")
+    pattern = re.compile(r"([MP]\w{1,2}[CV]\w{1,2}[SC])")
     matches = pattern.findall(proteinstr)
     print("coincidencias encontradas",matches)
 
